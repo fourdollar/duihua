@@ -1,0 +1,8 @@
+launchConfigurations/
+node_modules
+.git
+public/data/*
+!public/data/testResultSummary.json
+manifest.yml
+manifest.yml
+VCAP_SERVICES.json

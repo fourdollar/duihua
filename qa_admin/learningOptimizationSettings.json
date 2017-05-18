@@ -1,0 +1,19 @@
+{
+	"try_num":4,
+	"split_num":3,
+	"threshold":{
+		"low":1,
+		"middle":7,
+		"high":10
+	},
+	"cronBatchSchedule" : "00 00 */2 * * *" ,
+	"interval_days":90,
+	"automatic": "false",
+	"classifier_name":{
+		"Production":"production",
+		"AutoLearn":"autolearn",
+		"Modified":"modified"
+	},
+	"Production_classifier_name" : "FINALCLASSIFY"
+}
+

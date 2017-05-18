@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<!--
+  IBM Confidential
+  OCO Source Materials
+  6949-63A
+  (c) Copyright IBM Corp. 2016
+ -->
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Ask Watson</title>
+  <link rel="shortcut icon" href="/images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/fukidashi.css">
+  <style type="text/css">
+
+  .bs-docs-section {
+    margin-top: 8em;
+  }
+  .bs-component {
+    position: relative;
+  }
+  .bs-component .modal-dialog {
+    width: 90%;
+  }
+  button.btn-notChosen{
+    background-color: #D8D6D5 !important;
+    border-color: #D8D6D5 !important;
+  }
+
+  @media ( min-width: 768px ) {
+    body {padding-top: 80px;
+      padding-bottom: 120px;
+      background: url(images/WatsonBackground_blue2.png) fixed right bottom no-repeat;
+      background-color: #0E2C4C;
+    }
+    #banner {
+      min-height: 300px;
+      border-bottom: none;
+    }
+    .bs-component .modal {
+      position: relative;
+      top: auto;
+      right: auto;
+      left: auto;
+      bottom: auto;
+      z-index: 2;
+      display: block;
+    }
+    .bs-component .popover {
+      position: relative;
+      display: inline-block;
+      width: 220px;
+      margin: 20px;
+    }
+    .nav-tabs {
+      margin-bottom: 15px;
+    }
+    .progress {
+      margin-bottom: 10px;
+    }
+    .watsongif{
+      width: 80px;
+      height: 80px;
+    }
+  div#footerArea {
+    position: fixed !important;
+    position: absolute;
+    background-color: #FFFFFF;
+    bottom: 0;
+    height: 120px;
+    padding-top: 10px;
+    padding-right: 10%;
+    left: 0;
+    width: 110%;
+    z-index: 1;
+  }
+  #QuestionText{
+    width: 110%;
+  }
+}
+
+  /*モバイル用 Media Queries*/
+@media screen and (max-width: 768px) {
+  body {padding-top: 80px;
+    padding-bottom: 120px;
+    background: url(images/WatsonBackground_blue2_small2.png) fixed right top no-repeat;
+    background-color: #0E2C4C;
+    background-size: 720px auto;
+  }
+  #banner {
+    min-height: 70px;
+    border-bottom: none;
+  }
+  .bs-component .modal {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    z-index: 1;
+    display: block;
+  }
+  .bs-component .popover {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    margin: 5px;
+  }
+  .navbar-toggle {
+    display: none;
+  }
+  .collapse {
+    display: inline;
+  }
+  .navbar-right {
+    float: right;
+    padding-left: 0px;
+  }
+  .navbar-header {
+    float: left;
+  }
+  .dropdown-toggle{
+    float: right;
+  }
+  .nav-tabs {
+    margin-bottom: 4px;
+  }
+  .progress {
+    margin-bottom: 2px;
+  }
+  .watsongif{
+    width: 40px;
+    height: 40px;
+    margin-top: 19px;
+  }
+  #watson_logo{
+    width: 40px;
+    height: auto;
+  }
+  div#footerArea {
+    position: fixed !important;
+    position: absolute;
+    background-color: #FFFFFF;
+    bottom: 0;
+    height: 48px;
+    padding-top: 0px;
+    padding-right: 0%;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    background-color: transparent;
+  }
+  #QuestionText{
+    margin-left: -2vw;
+    width: 104vw;
+  }
+}
+
+  </style>
+  <!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body style="font-family:'Lucida Grande', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, sans-serif;">
+  <!-- header
+  ================================================== -->
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">Ask Watson <span class="glyphicon glyphicon-home">
+          </a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+           <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">設定 <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#" id="conf_multi_answer" onclick="conf_multi_answer();"><span class="glyphicon glyphicon-remove"> 複数選択肢の提示</a>
+                </li>
+                <li><a href="#" id="conf_feedback" onclick="conf_feedback();"><span class="glyphicon glyphicon-remove"> フィードバック機能</a>
+                </li>
+                <li><a href="#" id="conf_confidence" onclick="conf_confidence();"><span class="glyphicon glyphicon-remove"> 確信度の表示</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+  </header>
+
+  <!-- ガイド部分
+  ================================================== -->
+  <div class="row">
+    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+      <!-- Navigation Tab
+      ================================================== -->
+      <div class="bs-component">
+        <div id="chatlog" class="row"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer箇所
+  ================================================== -->
+  <div class="row container-fluid" id="footerArea">
+    <div class="col-sm-8 col-xs-12">
+    	<div class="form-group">
+        	<textarea class="form-control" rows="1" id="QuestionText" onkeydown="if(event.keyCode == 13){askwatson($('#QuestionText').val());}" placeholder="ご質問を入力してエンターを押してください" row="2"></textarea>
+    	</div>
+    </div>
+    <div class="col-xs-4">
+      <div class="row">
+      	<div class="col-sm-offset-1 col-sm-11 hidden-xs">
+          <center>
+      		<img src="images/Watson_Logo_small.png" id="watson_logo"><BR>
+      		Powered by Watson
+        </center>
+      	</div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="audioParent">
+            <audio class="audio">
+            Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+      </div><!-- row -->
+
+    </div>
+  </div>
+
+  <!-- feedback popup
+  ================================================== -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">Other Comment</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <table class="table table-striped">
+              <tr>
+                <th>想定回答</th>
+                <td> <select id="ExpectedAnswer"></select></td>
+              </tr>
+              <tr>
+                <th>フリーコメント</th>
+                <td><input id="comment" class="form-control"></td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"  onclick="closePopup();">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveComment();">save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- JavaScript Section
+  ================================================== -->
+  <script src="js/jquery-1.11.0.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Customized Javascript
+  ================================================== -->
+  <script src="js/watson_qa.js"></script>
+</body>
+</html>

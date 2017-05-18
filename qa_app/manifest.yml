@@ -1,0 +1,32 @@
+declared-services:
+  Natural Language Classifier-1 :
+    label: natural_language_classifier
+    plan: standard
+  Natural Language Classifier-16:
+    label: natural_language_classifier
+    plan: standard
+  Natural Language Classifier-fc:
+    label: natural_language_classifier
+    plan: standard
+  dashDB-cq:
+    label: dashDB
+    plan: Entry
+applications:
+- services:
+  - Natural Language Classifier-1
+  - Natural Language Classifier-16
+  - Natural Language Classifier-fc
+  - dashDB-cq
+  name: watson-qa-manage-asset-04658
+  host: watson-qa-manage-asset-04658
+  domain: mybluemix.net
+  command: node app.js
+  path: .
+  memory: 256M
+env:
+  ALLOW_IP: ''
+  IPSECURITY: 'OFF'
+  AUTHENTICATION: 'ON'
+  DEBUG: '1'
+  ADMIN_USER: 'qac2016'
+  ADMIN_PASS: 'qac2016password'

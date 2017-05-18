@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<!--
+  IBM Confidential
+  OCO Source Materials
+  6949-63A
+  (c) Copyright IBM Corp. 2016
+ -->
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NLC Management Tool </title>
+  <link rel="shortcut icon" href="/images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/classic.css">
+  <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+  <style type="text/css">
+  body {padding-top: 80px;}
+  @media ( min-width: 768px ) {
+    #banner {
+      min-height: 300px;
+      border-bottom: none;
+    }
+    .bs-docs-section {
+      margin-top: 8em;
+    }
+    .bs-component {
+      position: relative;
+    }
+    /*.bs-component .modal {
+      position: relative;
+      top: auto;
+      right: auto;
+      left: auto;
+      bottom: auto;
+      z-index: 1;
+      display: block;
+    }
+    .bs-component .modal-dialog {
+      width: 90%;
+    }*/
+    .bs-component .popover {
+      position: relative;
+      display: inline-block;
+      width: 220px;
+      margin: 20px;
+    }
+    .nav-tabs {
+      margin-bottom: 15px;
+    }
+    .progress {
+      margin-bottom: 10px;
+    }
+  }
+
+
+  </style>
+
+  <!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+</head>
+
+
+<body>
+
+  <!-- header
+  ================================================== -->
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">NLC Management Tool <span class="glyphicon glyphicon-home">
+          </a>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+
+  </header>
+
+  <!-- ガイド部分
+  ================================================== -->
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <!-- Navigation Tab
+      ================================================== -->
+      <div class="bs-component">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab-nlcmanage" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">NLCの管理</a>
+          </li>
+          <li><a href="#tab-answerstore" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">アンサーストア管理</a>
+          </li>
+          <li><a href="#tab-qatest" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">Q&Aテスト</a>
+          </li>
+          <li><a href="#tab-feedback" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">フィードバック管理</a>
+          </li>
+          <li><a href="#tab-securitymanage" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">セキュリティ管理</a>
+          </li>
+          <li><a href="#tab-learningOptimization" data-toggle="tab"><span class="glyphicon glyphicon-triangle-right">学習最適化管理</a>
+          </li>
+        </ul>
+        <!-- NLC Instance管理用 tab
+        ================================================== -->
+        <div id="myTabContent" class="tab-content">
+          <div class="tab-pane fade active in" id="tab-nlcmanage">
+            <div class="row">
+              <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-xs-offset-1">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-10 col-xs-10">
+                    <h3>NLC インスタンス・リスト</h3>
+                    <div class="table-resonsive">
+                      <table id="manageNLCtable" class="table table-striped table-bordered">
+                        <tr>
+                          <th>選択</th>
+                          <th>Classifier Name</th>
+                          <th>Classifier ID</th>
+                          <th>Language</th>
+                          <th>作成日時</th>
+                          <th>Status</th>
+                        </tr>
+                      </table>
+                    </div>
+                    <button id="update_manageNLCtableButton" type="button" class="btn btn-primary btn-sm" onclick="update_manageNLCtable();"><span class="glyphicon glyphicon-th-list">リストの更新
+                    </button>
+                    <button id="deleteClassifier" type="button" class="btn btn-primary btn-sm" onclick="deleteClassifiers()"><span class="glyphicon glyphicon-remove">選択削除
+                    </button>
+                  </div>
+                </div>
+
+                <HR></HR>
+
+                <div class="row">
+                  <div class="col-xs-12">
+                    <h3>NLC Classifierの作成</h3>
+                    <form id="createClassifierForm" action="/create" enctype="multipart/form-data" method="post">
+                      <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                        <div>
+                          <label for="selectLanguage">Classifier Name</label>
+                        </div>
+                        <div>
+                          <input type="text" id="classifierName" name="classifierName" class="form-control">
+                        </div>
+                        <div>
+                          <select name="selectLanguage" id="selectlanguage" class="form-control">
+                            <option value="ja">日本語</option>
+                            <option value="en">英語</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                        <div>
+                          <a type="btn btn-success" style="cursor:pointer" onclick="$('#create-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                            <span id="create-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                          </a>
+                        </div>
+                        <input type="file" id="create-file-input" name="csv" multiple="multiple" style="display: none;">
+                        <input type="submit" value="Classifierの作成" class="btn btn-warning btn-sm" >
+                        <div id="createClassifierResult">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <HR></HR>
+
+                <div class="row">
+                  <div class="col-xs-12">
+                    <h3>NLC Classifierのしきい値</h3>
+                    <form id="setClassifierThreshold" action="/setClassifierThreshold" enctype="multipart/form-data" method="post">
+                      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                        <div>
+                          <label for="selectLanguage">上限しきい値</label>
+                        </div>
+                        <select id="confidenceThreshold" multiple="" class="form-control">
+                          <option>0.0</option>
+                          <option>0.1</option>
+                          <option>0.2</option>
+                          <option>0.3</option>
+                          <option>0.4</option>
+                          <option>0.5</option>
+                          <option>0.6</option>
+                          <option>0.7</option>
+                          <option>0.8</option>
+                          <option>0.9</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                        <div>
+                          <label for="selectLanguage">下限しきい値</label>
+                        </div>
+                        <select id="confidencePotentialThreshold" multiple="" class="form-control">
+                          <option>0.0</option>
+                          <option>0.1</option>
+                          <option>0.2</option>
+                          <option>0.3</option>
+                          <option>0.4</option>
+                          <option>0.5</option>
+                          <option>0.6</option>
+                          <option>0.7</option>
+                          <option>0.8</option>
+                          <option>0.9</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10 col-xs-offset-1">
+                        <input type="submit" value="しきい値の設定" class="btn btn-danger btn-sm" >
+                        <div id="setClassifierThresholdresult">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Answer Store tab
+          ================================================== -->
+          <div class="tab-pane fade" id="tab-answerstore">
+
+            <div class="row">
+              <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-xs-offset-1">
+
+                <div class="row">
+                  <h3>アンサーストアデータの登録</h3>
+                  <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                    <div class="row">
+                      <form id="uploadAnswerstoreForm" action="/manage/api/v1/uploadAnswerstore" enctype="multipart/form-data" method="post">
+                        <a type="btn btn-success" style="cursor:pointer" onclick="$('#Answerstore-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                          <span id="Answerstore-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                        </a><br>
+                        <input type="file" id="Answerstore-file-input" name="csv" multiple="multiple" style="display: none;">
+                        <button class="btn btn-warning btn-sm">アンサーストアデータの登録
+                        </button>
+                        <span class="help-block">アンサーストアにデータをアップロードします</span>
+                        <div id="uploadAnswerstoreResult">
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <HR></HR>
+
+                <div class="row">
+                  <h3>アンサーストアの表示</h3>
+                  <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                    <div class="row">
+                      <button id="dspAnswerstorebutton" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_Answerstore" onclick="dspAnswerstore();">アンサーストアの表示
+                      </button>
+                      <span class="help-block">アンサーストアの内容を表示する</span>
+                    </div>
+                    <div class="row">
+                      <span class="help-block">Text to SpeechのデモURL</span>
+                    </div>
+                    <div class="row">
+                      <span class="help-block"><a href="https://text-to-speech-demo.mybluemix.net/" target="_blank">https://text-to-speech-demo.mybluemix.net/</a></span>
+                    </div>
+                  </div>
+                </div>
+
+                <HR></HR>
+
+                <div class="row">
+                  <h3>アンサーストアの作成</h3>
+                  <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                    <div class="row">
+                      <form id="createAnswerstoreForm" action="/manage/api/v1/createAnswerstore" enctype="multipart/form-data" method="post">
+                        <button class="btn btn-info btn-sm">アンサーストアの作成
+                        </button>
+                        <span class="help-block">アンサーストアを作成します。既存のアンサーストアは削除され、新規作成されます</span>
+                        <div id="createAnswerstoreResult">
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <HR></HR>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Q&A Test用 tab
+          ================================================== -->
+          <div class="tab-pane fade" id="tab-qatest">
+
+            <div class="row">
+              <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-xs-offset-1">
+
+                <div class="row">
+                  <h3>NLC インスタンス・リスト</h3>
+                  <div class="table-responsive">
+                    <table id="qatestNLCtable" class="table table-striped table-bordered">
+                      <tr>
+                        <td>Classifier Name</td>
+                        <td>Classifier ID</td>
+                        <td>Language</td>
+                        <td>作成日時</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <button id="update_qatestNLCtableButton" type="button" class="btn btn-primary btn-sm" onclick="update_qatestNLCtable();"><span class="glyphicon glyphicon-th-list">リストの更新
+                  </button>
+                </div>
+
+                <HR></HR>
+
+                <div class="row">
+                  <h3>NLC バッチ・テスト</h3>
+
+                  <form id="NlctestForm" action="/manage/api/v1/downloadNlctest" enctype="multipart/form-data" method="post">
+                    <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <label for="select_classifier_id" class="col-lg-2 control-label">Classifier Name</label>
+                          <select name="select_classifier_id" class="form-control" id="select_classifier_id">
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-md-5 col-sm-6 col-xs-10">
+                      <div class="row">
+                        <a type="btn btn-success" style="cursor:pointer" onclick="$('#nlc-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                          <span id="nlc-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                        </a><br>
+                        <input type="file" id="nlc-file-input" name="csv" multiple="multiple" style="display: none;">
+                        <input type="submit" value="テスト結果をダウンロード" class="btn btn-warning btn-sm" >
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#dspnlc_modal" onclick="dspnlctest();" >テスト結果表示</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <HR></HR>
+
+                <div class="row">
+                  <h3>Q&A バッチ・テスト</h3>
+                  <form id="QAtestForm" action="/manage/api/v1/downloadQAtest" enctype="multipart/form-data" method="post">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <a type="btn btn-success" style="cursor:pointer" onclick="$('#qa-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                        <span id="qa-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                      </a>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <input type="file" id="qa-file-input" name="csv" multiple="multiple" style="display: none;">
+                      <input type="submit" value="テスト結果をダウンロード" class="btn btn-warning btn-sm" >
+                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#dspQA_modal" onclick="dspQAtest();" >テスト結果表示</button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Feedback Manage tab
+          ================================================== -->
+          <div class="tab-pane fade" id="tab-feedback">
+
+            <div class="col-lg-3 col-md-4 col-sm-5 col-sm-offset-1 col-xs-6 col-xs-offset-1 ">
+              <div class="row">
+                <h3>フィルター</h3>
+                <div class="form-group">
+
+                  <label for="dtp_from" class="col-xs-12 control-label">From Date/Time</label>
+                  <div class="col-xs-12">
+                    <div class="input-group date form_datetime col-xs-12" data-link-field="dtp_from">
+                      <input class="form-control" size="16" type="text" value="" readonly>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_from" value="" /><br/>
+                  </div>
+
+                  <label for="dtp_to" class="col-xs-12 control-label">To Date/Time</label>
+                  <div class="col-xs-12">
+                    <div class="input-group date form_datetime col-xs-12" data-link-field="dtp_to">
+                      <input class="form-control" size="16" type="text" value="" readonly>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_to" value="" /><br/>
+                  </div>
+
+                  <div class="col-xs-12">
+                    <div class="checkbox">
+                      <label>
+                        <input id="feedback_good" type="checkbox" checked="checked"> Good
+                      </label>
+                      <label>
+                        <input id="feedback_bad" type="checkbox" checked="checked"> Bad
+                      </label>
+                      <label>
+                        <input id="feedback_all" type="checkbox"> 全質問
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-xs-6 col-xs-offset-1 col-sm-4 col-sm-offset-1 col-md-4 col-md-offset-1">
+              <div class="row">
+                <h3>操作</h3>
+                <button id="dspFeedback" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_feedback" onclick="dspFeedback();">フィードバックの表示
+                </button>
+                <span class="help-block">フィードバック結果を表示する</span>
+                <button id="downloadFeedback" type="button" class="btn btn-default btn-sm" onclick="downloadFeedback();">フィードバックのダウンロード
+                </button>
+                <span class="help-block">フィードバック結果をダウンロードする</span>
+                <button id="deleteFeedback" type="button" class="btn btn-warning btn-sm" onclick="deleteFeedback();">フィードバックの削除
+                </button>
+                <span class="help-block">フィードバック情報を削除する</span>
+                <button id="createFeedbackstore" type="button" class="btn btn-info btn-sm" onclick="createFeedbackstore();">フィードバックストアの作成
+                </button>
+                <span class="help-block">フィードバック・ストアを初期作成する</span>
+                <div id="message_feedback">
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- 中山追記-->
+          <div class="tab-pane fade" id="tab-securitymanage">
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 col-xs-offset-1">
+                    <h3>ユーザーID・パスワードの登録・取得</h3>
+                    <div class="container">
+                    <div class="row">
+                      <div class="col-lg-5 col-md-5 col-sm-10 col-xs-10">
+                        <div class="well text-center">
+                      <h4>ユーザーID・パスワードの登録</h4>
+                      <form id="uploadUserAuthForm" action="/manage/api/v1/uploadAuthList" enctype="multipart/form-data" method="post">
+                          <div>
+                            <a type="btn btn-success" style="cursor:pointer" onclick="$('#UserAuth-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                              <span id="security-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                            </a>
+                          <input type="file" id="UserAuth-file-input" name="csv" multiple="multiple" style="display: none;">
+                          <!--input type="submit" value="ユーザーリストの登録" class="btn btn-warning btn-sm" -->
+                          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                          <button class="btn btn-warning btn-sm" onclick=""><span class="glyphicon glyphicon-upload">アップロード</button>
+                          </div>
+                          <span class="help-block">
+                            ユーザーID・パスワード一覧を登録する</span>
+                          <div id="createAuthFileResult">
+                          </div>
+                      <div class="table-resonsive">
+                      <table id="failure_list" class="table table-striped table-bordered">
+                        <tr>
+                          <th>ユーザーID</th>
+                          <th>氏名</th>
+                          <th>理由</th>
+                        </tr>
+                      </table>
+                    </div>
+                      </form>
+                  </div>
+                </div>
+                    <div class="col-lg-5 col-md-5 col-sm-10 col-xs-10">
+                      <div class="well text-center">
+                      <h4>ユーザーID・パスワード一覧の取得</h4>
+                      <button id="downloadUserAuthForm" type="button" class="btn btn-info btn-sm" onclick="downloadUserAuthForm();"><span class="glyphicon glyphicon-download-alt">ダウンロード
+                      </button>
+                      <span class="help-block">
+                        登録しているユーザーID・パスワードをダウンロードする</span>
+                      <div id="downloadUserAuthListresult">
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                  <h3>IPアドレスの登録・取得</h3>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-lg-5 col-md-5 col-sm-10 col-xs-10">
+                          <div class="well text-center">
+                        <h4>IPアドレスの登録</h4>
+                        <form id="uploadIPListForm" action="/manage/api/v1/uploadIPList" enctype="multipart/form-data" method="post">
+                          <div>
+                            <a type="btn btn-success" style="cursor:pointer" onclick="$('#IPList-file-input').click();"><span class="glyphicon glyphicon-folder-open">
+                              <span id="IPList-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                            </a>
+                          <input type="file" id="IPList-file-input" name="csv" multiple="multiple" style="display: none;">
+                          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <button class="btn btn-warning btn-sm" onclick=""><span class="glyphicon glyphicon-upload">アップロード</button>
+                          </div>
+                          <!--button class="btn btn-info btn-sm">IPアドレスの登録</button-->
+                          <span class="help-block">サイトアクセスを許可するIPアドレス一覧を登録する</span>
+                          <div id="uploadIPListResult">
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                      <div class="col-lg-5 col-md-5 col-sm-10 col-xs-10">
+                        <div class="well text-center">
+                        <h4>IPアドレス一覧の取得</h4>
+                        <button id="downloadIPListForm" type="button" class="btn btn-info btn-sm"  onclick="downloadIPList();"><span class="glyphicon glyphicon-download-alt">ダウンロード
+                        </button>
+                        <span class="help-block">
+                          サイトアクセスを許可するIPアドレス一覧をダウンロードする</span>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!--中山追記　終了-->
+          <!-- Learning Optimization用 tab
+          ================================================== -->
+          <div class="tab-pane fade" id="tab-learningOptimization">
+
+          <!-- 佐川追加：学習最適化対象とするClassifierの選択
+
+          ================================================== -->
+          <div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 col-xs-offset-1">
+              <div class="row">
+              <h3>学習最適化対象とするClassifierの選択</h3>
+              <div style="font-size:20px;color:black">
+                  <span id="UseClassifierName"></span><!--選択しているclassifierを取得-->
+                </div>
+                  <span class="help-block">1.学習最適化対象とするClassifierを選択します。</span>
+                  <div>
+                    <select id="select_classifier_id_update" class="form-control" style="width:40%;margin-bottom:20px;float:left"></select>
+                    <button id="SetClassier" type="button" class="btn btn-danger btn-sm" onclick="update_selectClassifier();" style="margin-left:1em">セレクトボックスの更新</button>
+                  </div>
+                  <span class="help-block" style=clear:both;>2.選択したClassifierを学習最適化対象に設定します。</span>
+                    <button id="SetClassifier_button" type="button" class="btn btn-success btn-sm" onclick="setClassifier();">Classifierの設定</button>
+
+              </div>
+          <HR></HR>
+
+                <div class="row">
+                  <h3>テスト実施結果サマリー</h3>
+
+                  <ul class="list-inline">
+                    <li><span id = "execMode"></span></li>
+                    <li><span id="executedDate"></span></li>
+                    <li><span id="num_feedback"></span></li></ul>
+                  <div class="table-responsive">
+                    <table id="nlcLOtestSumm" class="table table-bordered table-hover">
+                      <tr class="success">
+                        <th>Classifier名</th>
+                        <th>Classifier ID</th>
+                        <th>正答率</th>
+                        <th>ステータス</th>
+                        <th>トレーニングデータ数全体</th>
+                        <th>テスト結果ダウンロード</th>
+                        <th>トレーニングデータダウンロード</th>
+                        <th>本番NLC適用</th>
+                        <th>備考</th>
+                          </tr>
+                    </table>
+                  </div>
+
+                  <button id="update_nlcLOtestSummButton" type="button" class="btn btn-danger btn-sm" onclick="update_nlcLOtestSumm();"><span class="glyphicon glyphicon-th-list">リフレッシュ
+                  </button>
+                </div>
+                <HR></HR>
+              <div class="row">
+                <div class="col-xs-4">
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><h4>Classifierの修正</h4></div>
+
+                    <ul class="list-group">
+
+                    <li class="list-group-item">
+                      <div class="row">
+                          <div class="col-xs-12">
+                           <span class="help-block">1.カスタマイズ用データ（autolearn）をダウンロードします。</span>
+                           <div>
+                            <input type="file" id="nlc-file-download" name="csv" multiple="multiple" style="display: none;">
+                            <button id="downloadCustomTrain" type="button" class="btn btn-success btn-sm" onclick="downloadCustomTrain();">Download</button>
+                           </div>
+                          </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                    <div class="row">
+                      <form id="createLOClassifierForm" action="/manage/api/v1/uploadModifiedData" enctype="multipart/form-data" method="post">
+                      <div class="col-xs-12">
+                        <span class="help-block">2.カスタマイズ済データを（modified）アップロードします。</span>
+                        <a type="btn btn-success" style="cursor:pointer" onclick="$('#upload-customfile-input').click();"><span class="glyphicon glyphicon-folder-open">
+                          <span id="upload-custom-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                        </a><br>
+                        <input type="file" id="upload-customfile-input" name="csv" multiple="multiple" style="display: none;">
+                        <input type="submit" value="Upload" class="btn btn-info btn-sm" >
+                        <div id="message_customtest"></div>    <!--トレーニング状況を表示するdiv-->
+                      </div>
+                    </form>
+                    </div>
+                    </li>
+                  </ul>
+                </div></div>
+                  <div class="col-xs-4">
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><h4>テストデータの修正</h4></div>
+                    <ul class="list-group">
+
+                      <li class="list-group-item">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <span class="help-block">1.現在のテストデータをダウンロードします。</span>
+                             <div>
+                              <input type="file" id="nlc-file-download" name="csv" multiple="multiple" style="display: none;">
+                              <button id="downloadTestData" type="button" class="btn btn-success btn-sm" onclick="downloadTestData();">Download</button>
+                            </div>
+                        </div>
+                        </div>
+                      </li>
+                      <li class="list-group-item">
+                      <div class="row">
+                        <form id="uploadTestDataForm" action="/manage/api/v1/uploadTestData" enctype="multipart/form-data" method="post">
+                          <div class="col-xs-12">
+                          <span class="help-block">2.テストデータをアップロードします。</span>
+                          <a type="btn btn-success" style="cursor:pointer" onclick="$('#upload-testfile-input').click();"><span class="glyphicon glyphicon-folder-open">
+                            <span id="upload-test-cover" class="input-xlarge uneditable-input">クリックしてファイルを選択</span>
+                          </a><br>
+                          <input type="file" id="upload-testfile-input" name="csv" multiple="multiple" style="display: none;">
+                        <input type="submit" value="Upload" class="btn btn-info btn-sm">
+                        <div id="message_uploadtest"></div>
+                      </div>
+                      </form>
+                      </div>
+                    </li>
+
+                    <!--テストボタンを分離。
+
+                    <li class="list-group-item">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="help-block">3.最新のテストデータで、再テストを実施します。</span>
+                           <div>
+                            <button id="retestAllTraindata" type="button" class="btn btn-success btn-sm" onclick="retestAllTraindata();">再テストの実施</button>
+                          </div>
+                      </div>
+                        <div id="message_retest"></div>
+                      </div>
+                    </li>
+                    --------------------------------------->
+                </ul>
+              </div>
+            </div>
+
+　　　　<div class="col-xs-8" style="clear:both">
+         <div class="panel panel-default">
+           <div class="panel-heading"><h4>テストの実施</h4></div>
+
+           <ul class="list-group">
+
+           <li class="list-group-item">
+                  <span class="help-block">・修正したClassifierとテストデータを用いてテストを実施します。</span>
+                  <div>
+                   <button id="TestClassifier" type="button" class="btn btn-danger btn-sm" onclick="testClassifier();">テストの実施</button>
+                   <div id="test_nlc_result"></div>
+                 </div>
+
+         </li>
+       </ul>
+     </div>
+     </div>
+</div>
+<HR></HR>
+              <div class="col-xs-6">
+                <div style="border-style: solid ; border-width: 2px; padding: 10px 5px 5px 10px; border-color: blue;  width: 500px; border-radius: 10px;">
+                <ul class="list">
+              <li><form id="update_execMode" action="post" class="form-inline">
+                  <span>学習最適化実行モードの変更:</span>
+              <label class="radio-inline">
+                <input type="radio" name="execMode2" id="manual" value="manual">手動
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="execMode2" id="auto" value="auto">自動
+              </label>
+              <label><input type="submit" value="変更" class="btn btn-success btn-xs"></label>
+            </form><div id="message_changeExecMode"></div></li>
+            <li><span id="term_FBdata"></span></li>
+            <li><span id="cronBatchTime"></span></li>
+          </ul></div></div>
+        </div>
+          </div>
+
+  <!-- Footer箇所
+  ================================================== -->
+  <div class="row">
+    <div class="col-xs-9 col-xs-offset-3">
+      <img src="/images/Watson_Logo_small.png">
+      Powered by Watson Technology
+    </div>
+
+  </div>
+</div>
+  <!-- Modal Section
+  ================================================== -->
+  <div id="modal_Answerstore" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width:1024px; margin-left: -200px;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3>アンサーストア・データ</h3>
+        </div>
+        <div class="modal-body" id="AS-modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="dspnlc_modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width:1024px; margin-left: -200px;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3>テスト結果</h3>
+        </div>
+        <div class="modal-body" id="Nlc-modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dspQA_modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width:1024px; margin-left: -200px;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3>テスト結果</h3>
+        </div>
+        <div class="modal-body" id="QA-modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal_feedback" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width:1400px; margin-left: -400px;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3>フィードバック結果</h3>
+        </div>
+        <div class="modal-body" id="FB-modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Section
+  ================================================== -->
+  <script src="/js/jquery-1.11.0.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.columns.min.js"></script>
+  <script src="/js/tab.js"></script>
+  <script type="text/javascript" src="/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="/js/locales/bootstrap-datetimepicker.ja.js" charset="UTF-8"></script>
+
+  <!-- Customized Javascript
+  ================================================== -->
+  <script src="/js/watson_test.js"></script>
+  <script src="/js/watson_manage.js"></script>
+  <script src="/js/watson_feedback.js"></script>
+  <script src="/js/watson_Answerstore.js"></script>
+  <script src="/js/watson_security.js"></script>
+  <script src="/js/watson_learningOptimization.js"></script>
+
+
+</body>
+</html>

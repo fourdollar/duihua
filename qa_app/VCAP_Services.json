@@ -1,0 +1,47 @@
+{
+   "natural_language_classifier": [
+      {
+         "name": "Natural Language Classifier-1",
+         "label": "natural_language_classifier",
+         "plan": "standard",
+         "credentials": {
+            "url": "https://gateway.watsonplatform.net/natural-language-classifier/api",
+            "password": "k2NPw8OqPxjW",
+            "username": "9b6aa9c3-4aae-4c3b-97db-7f9ba337d192"
+            }
+      }
+   ],
+   "dashDB": [
+       {
+         "name": "dashDB-cq",
+         "label": "dashDB",
+         "plan": "Entry",
+         "credentials": {
+                "port": 50000,
+                "db": "BLUDB",
+                "username": "dash7817",
+                "ssljdbcurl": "jdbc:db2://dashdb-entry-yp-dal09-10.services.dal.bluemix.net:50001/BLUDB:sslConnection=true;",
+                "host": "dashdb-entry-yp-dal09-10.services.dal.bluemix.net",
+                "https_url": "https://dashdb-entry-yp-dal09-10.services.dal.bluemix.net:8443",
+                "dsn": "DATABASE=BLUDB;HOSTNAME=dashdb-entry-yp-dal09-10.services.dal.bluemix.net;PORT=50000;PROTOCOL=TCPIP;UID=dash7817;PWD=MLIvgRp2q1i3;",
+                "hostname": "dashdb-entry-yp-dal09-10.services.dal.bluemix.net",
+                "jdbcurl": "jdbc:db2://dashdb-entry-yp-dal09-10.services.dal.bluemix.net:50000/BLUDB",
+                "ssldsn": "DATABASE=BLUDB;HOSTNAME=dashdb-entry-yp-dal09-10.services.dal.bluemix.net;PORT=50001;PROTOCOL=TCPIP;UID=dash7817;PWD=MLIvgRp2q1i3;Security=SSL;",
+                "uri": "db2://dash7817:MLIvgRp2q1i3@dashdb-entry-yp-dal09-10.services.dal.bluemix.net:50000/BLUDB",
+                "password": "MLIvgRp2q1i3"
+         }
+      }
+   ],
+   "text_to_speech": [
+      {
+         "name": "watson_assets_aha03784_tts",
+         "label": "text_to_speech",
+         "plan": "standard",
+         "credentials": {
+            "url": "https://stream.watsonplatform.net/text-to-speech/api",
+            "password": "nY4oJZgahouo",
+            "username": "e6aa45c3-5ede-4f30-b5f6-1b9c6fd593d5"
+        }
+      }
+   ]
+}
